@@ -1,26 +1,22 @@
-/* @odoo-module */
 /* global vis */
 
-import {usePlugin} from "@odoo/owl";
+import {Component, onWillStart, signal, useProps} from "@odoo/owl";
 import {loadCSS, loadJS} from "@web/core/assets";
 import {registry} from "@web/core/registry";
-import {useLayoutEffect, useRef} from "@web/owl2/utils";
 import {standardFieldProps} from "@web/views/fields/standard_field_props";
+import {useLayoutEffect} from "@web/owl2/utils";
 import {useService} from "@web/core/utils/hooks";
-import {ActionManagerPlugin} from "@web/webclient/actions/action_plugin";
-
-const {Component, onWillStart, useLayoutEffect, useRef} = owl;
 
 const {document} = globalThis;
 
 class JobDirectGraph extends Component {
-  static props = {...standardFieldProps};
   static template = "queue.JobDirectGraph";
+  props = useProps({...standardFieldProps});
+  rootRef = signal.ref();
 
   setup() {
     this.orm = useService("orm");
-    this.action = usePlugin(ActionManagerPlugin);
-    this.rootRef = useRef("root_vis");
+    this.action = useService("action");
     this.network = null;
     this.forceRender = false;
     onWillStart(async () => {
@@ -35,7 +31,7 @@ class JobDirectGraph extends Component {
           if (this.network) {
             this.$el.innerHTML = "";
           }
-          return this.rootRef.el;
+          return this.rootRef();
         };
       },
       () => []
@@ -43,7 +39,7 @@ class JobDirectGraph extends Component {
   }
 
   get $el() {
-    return this.rootRef.el;
+    return this.rootRef();
   }
 
   get resId() {
