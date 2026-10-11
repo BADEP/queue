@@ -84,6 +84,7 @@ like:
 ``` python
 from odoo.addons.queue_job.delay import group, chain
 
+
 def button_done(self):
     group_a = group(self.delayable().method_foo(), self.delayable().method_bar())
     group_b = group(self.delayable().method_baz(1), self.delayable().method_baz(2))
@@ -115,8 +116,7 @@ some task and get more specific errors. Usage is as follows:
 ``` python
 def button_split_delayable(self):
     (
-        self  # Can be a big recordset, let's say 1000 records
-        .delayable()
+        self.delayable()  # Can be a big recordset, let's say 1000 records
         .generate_thumbnail((50, 50))
         .set(priority=30)
         .set(description=_("generate xxx"))
@@ -132,10 +132,9 @@ when the previous one is done:
 ``` python
 def button_increment_var(self):
     (
-        self
-        .delayable()
+        self.delayable()
         .increment_counter()
-        .split(1, chain=True) # Will exceute the jobs one after the other
+        .split(1, chain=True)  # Will exceute the jobs one after the other
         .delay()
     )
 ```
@@ -233,19 +232,19 @@ Example of related action code:
 
 ``` python
 class QueueJob(models.Model):
-    _inherit = 'queue.job'
+    _inherit = "queue.job"
 
     def related_action_partner(self, name):
         self.ensure_one()
         model = self.model_name
         partner = self.records
         action = {
-            'name': name,
-            'type': 'ir.actions.act_window',
-            'res_model': model,
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_id': partner.id,
+            "name": name,
+            "type": "ir.actions.act_window",
+            "res_model": model,
+            "view_type": "form",
+            "view_mode": "form",
+            "res_id": partner.id,
         }
         return action
 ```
@@ -304,10 +303,12 @@ Tip: you can do this at test case level like this
 @classmethod
 def setUpClass(cls):
     super().setUpClass()
-    cls.env = cls.env(context=dict(
-        cls.env.context,
-        queue_job__no_delay=True,  # no jobs thanks
-    ))
+    cls.env = cls.env(
+        context=dict(
+            cls.env.context,
+            queue_job__no_delay=True,  # no jobs thanks
+        )
+    )
 ```
 
 Then all your tests execute the job methods synchronously without
@@ -391,7 +392,7 @@ def test_method_to_test(self):
             self.env["model"].my_job_method,
             args=("Hi!",),
             kwargs=dict(count=expected_count),
-            properties=dict(priority=15)
+            properties=dict(priority=15),
         )
         self.assertEqual(result, expected_count)
 
@@ -426,10 +427,12 @@ Tip: you can do this at test case level like this
 @classmethod
 def setUpClass(cls):
     super().setUpClass()
-    cls.env = cls.env(context=dict(
-        cls.env.context,
-        queue_job__no_delay=True,  # no jobs thanks
-    ))
+    cls.env = cls.env(
+        context=dict(
+            cls.env.context,
+            queue_job__no_delay=True,  # no jobs thanks
+        )
+    )
 ```
 
 Then all your tests execute the job methods synchronously without

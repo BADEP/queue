@@ -10,18 +10,19 @@ Example:
 ``` python
 from odoo import models, fields, api
 
-class MyModel(models.Model):
-   _name = 'my.model'
 
-   def my_method(self, a, k=None):
-       _logger.info('executed with a: %s and k: %s', a, k)
+class MyModel(models.Model):
+    _name = "my.model"
+
+    def my_method(self, a, k=None):
+        _logger.info("executed with a: %s and k: %s", a, k)
 
 
 class MyOtherModel(models.Model):
-    _name = 'my.other.model'
+    _name = "my.other.model"
 
     def button_do_stuff(self):
-        self.env['my.model'].with_delay().my_method('a', k=2)
+        self.env["my.model"].with_delay().my_method("a", k=2)
 ```
 
 In the snippet of code above, when we call `button_do_stuff`, a job

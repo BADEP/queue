@@ -21,13 +21,13 @@ Job Queue
     :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
     :alt: License: LGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-OCA%2Fqueue-lightgray.png?logo=github
-    :target: https://github.com/OCA/queue/tree/19.0/queue_job
+    :target: https://github.com/OCA/queue/tree/20.0/queue_job
     :alt: OCA/queue
 .. |badge4| image:: https://img.shields.io/badge/weblate-Translate%20me-F47D42.png
-    :target: https://translation.odoo-community.org/projects/queue-19-0/queue-19-0-queue_job
+    :target: https://translation.odoo-community.org/projects/queue-20-0/queue-20-0-queue_job
     :alt: Translate me on Weblate
 .. |badge5| image:: https://img.shields.io/badge/runboat-Try%20me-875A7B.png
-    :target: https://runboat.odoo-community.org/builds?repo=OCA/queue&target_branch=19.0
+    :target: https://runboat.odoo-community.org/builds?repo=OCA/queue&target_branch=20.0
     :alt: Try me on Runboat
 
 |badge1| |badge2| |badge3| |badge4| |badge5|
@@ -65,20 +65,20 @@ instantaneous if no other job is running.
 
 Features:
 
-- Views for jobs, jobs are stored in PostgreSQL
-- Jobrunner: execute the jobs, highly efficient thanks to PostgreSQL's
-  NOTIFY
-- Channels: give a capacity for the root channel and its sub-channels
-  and segregate jobs in them. Allow for instance to restrict heavy jobs
-  to be executed one at a time while little ones are executed 4 at a
-  times.
-- Retries: Ability to retry jobs by raising a type of exception
-- Retry Pattern: the 3 first tries, retry after 10 seconds, the 5 next
-  tries, retry after 1 minutes, ...
-- Job properties: priorities, estimated time of arrival (ETA), custom
-  description, number of retries
-- Related Actions: link an action on the job view, such as open the
-  record concerned by the job
+-  Views for jobs, jobs are stored in PostgreSQL
+-  Jobrunner: execute the jobs, highly efficient thanks to PostgreSQL's
+   NOTIFY
+-  Channels: give a capacity for the root channel and its sub-channels
+   and segregate jobs in them. Allow for instance to restrict heavy jobs
+   to be executed one at a time while little ones are executed 4 at a
+   times.
+-  Retries: Ability to retry jobs by raising a type of exception
+-  Retry Pattern: the 3 first tries, retry after 10 seconds, the 5 next
+   tries, retry after 1 minutes, ...
+-  Job properties: priorities, estimated time of arrival (ETA), custom
+   description, number of retries
+-  Related Actions: link an action on the job view, such as open the
+   record concerned by the job
 
 **Table of contents**
 
@@ -102,18 +102,18 @@ retries.
 
 Here are some community usage examples:
 
-- Mass sending invoices:
-  `account_invoice_mass_sending <https://github.com/OCA/account-invoicing/tree/17.0/account_invoice_mass_sending>`__
-- Import data in the background:
-  `base_import_async <https://github.com/OCA/queue/tree/17.0/base_import_async>`__
-- Export data in the background:
-  `base_export_async <https://github.com/OCA/queue/tree/17.0/base_export_async>`__
-- Generate contract invoices with jobs:
-  `contract_queue_job <https://github.com/OCA/contract/tree/17.0/contract_queue_job>`__
-- Generate partner invoices with
-  jobs:`partner_invoicing_mode <https://github.com/OCA/account-invoicing/tree/17.0/partner_invoicing_mode>`__
-- Process the Sales Automatic Workflow actions with jobs:
-  `sale_automatic_workflow_job <https://github.com/OCA/sale-workflow/tree/17.0/sale_automatic_workflow_job>`__
+-  Mass sending invoices:
+   `account_invoice_mass_sending <https://github.com/OCA/account-invoicing/tree/17.0/account_invoice_mass_sending>`__
+-  Import data in the background:
+   `base_import_async <https://github.com/OCA/queue/tree/17.0/base_import_async>`__
+-  Export data in the background:
+   `base_export_async <https://github.com/OCA/queue/tree/17.0/base_export_async>`__
+-  Generate contract invoices with jobs:
+   `contract_queue_job <https://github.com/OCA/contract/tree/17.0/contract_queue_job>`__
+-  Generate partner invoices with
+   jobs:`partner_invoicing_mode <https://github.com/OCA/account-invoicing/tree/17.0/partner_invoicing_mode>`__
+-  Process the Sales Automatic Workflow actions with jobs:
+   `sale_automatic_workflow_job <https://github.com/OCA/sale-workflow/tree/17.0/sale_automatic_workflow_job>`__
 
 Installation
 ============
@@ -123,22 +123,22 @@ Be sure to have the ``requests`` library.
 Configuration
 =============
 
-- Using environment variables and command line:
+-  Using environment variables and command line:
 
-  - Adjust environment variables (optional):
+   -  Adjust environment variables (optional):
 
-    - ``ODOO_QUEUE_JOB_CHANNELS=root:4`` or any other channels
-      configuration. The default is ``root:1``
-    - ``ODOO_QUEUE_JOB_PORT=8069``, default ``--http-port``
-    - ``ODOO_QUEUE_JOB_SCHEME=https``, default ``http``
-    - ``ODOO_QUEUE_JOB_HOST=load-balancer``, default
-      ``--http-interface`` or ``localhost`` if unset
-    - ``ODOO_QUEUE_JOB_HTTP_AUTH_USER=jobrunner``, default empty
-    - ``ODOO_QUEUE_JOB_HTTP_AUTH_PASSWORD=s3cr3t``, default empty
-    - Start Odoo with ``--load=web,queue_job`` and ``--workers`` greater
-      than 1. [1]_
+      -  ``ODOO_QUEUE_JOB_CHANNELS=root:4`` or any other channels
+         configuration. The default is ``root:1``
+      -  ``ODOO_QUEUE_JOB_PORT=8069``, default ``--http-port``
+      -  ``ODOO_QUEUE_JOB_SCHEME=https``, default ``http``
+      -  ``ODOO_QUEUE_JOB_HOST=load-balancer``, default
+         ``--http-interface`` or ``localhost`` if unset
+      -  ``ODOO_QUEUE_JOB_HTTP_AUTH_USER=jobrunner``, default empty
+      -  ``ODOO_QUEUE_JOB_HTTP_AUTH_PASSWORD=s3cr3t``, default empty
+      -  Start Odoo with ``--load=web,queue_job`` and ``--workers``
+         greater than 1. [1]_
 
-- Using the Odoo configuration file:
+-  Using the Odoo configuration file:
 
 .. code:: ini
 
@@ -156,8 +156,8 @@ Configuration
    http_auth_user = jobrunner
    http_auth_password = s3cr3t
 
-- Confirm the runner is starting correctly by checking the odoo log
-  file:
+-  Confirm the runner is starting correctly by checking the odoo log
+   file:
 
 ::
 
@@ -166,14 +166,14 @@ Configuration
    ...INFO...queue_job.jobrunner.runner: queue job runner ready for db <dbname>
    ...INFO...queue_job.jobrunner.runner: database connections ready
 
-- Create jobs (eg using ``base_import_async``) and observe they start
-  immediately and in parallel.
-- Tip: to enable debug logging for the queue job, use
-  ``--log-handler=odoo.addons.queue_job:DEBUG``
+-  Create jobs (eg using ``base_import_async``) and observe they start
+   immediately and in parallel.
+-  Tip: to enable debug logging for the queue job, use
+   ``--log-handler=odoo.addons.queue_job:DEBUG``
 
-- Jobs that remain in ``enqueued`` or ``started`` state (because, for
-  instance, their worker has been killed) will be automatically
-  re-queued.
+-  Jobs that remain in ``enqueued`` or ``started`` state (because, for
+   instance, their worker has been killed) will be automatically
+   re-queued.
 
 .. [1]
    It works with the threaded Odoo server too, although this way of
@@ -330,20 +330,20 @@ only start when the previous one is done:
 Enqueing Job Options
 ~~~~~~~~~~~~~~~~~~~~
 
-- priority: default is 10, the closest it is to 0, the faster it will be
-  executed
-- eta: Estimated Time of Arrival of the job. It will not be executed
-  before this date/time
-- max_retries: default is 5, maximum number of retries before giving up
-  and set the job state to 'failed'. A value of 0 means infinite
-  retries.
-- description: human description of the job. If not set, description is
-  computed from the function doc or method name
-- channel: the complete name of the channel to use to process the
-  function. If specified it overrides the one defined on the function
-- identity_key: key uniquely identifying the job, if specified and a job
-  with the same key has not yet been run, the new job will not be
-  created
+-  priority: default is 10, the closest it is to 0, the faster it will
+   be executed
+-  eta: Estimated Time of Arrival of the job. It will not be executed
+   before this date/time
+-  max_retries: default is 5, maximum number of retries before giving up
+   and set the job state to 'failed'. A value of 0 means infinite
+   retries.
+-  description: human description of the job. If not set, description is
+   computed from the function doc or method name
+-  channel: the complete name of the channel to use to process the
+   function. If specified it overrides the one defined on the function
+-  identity_key: key uniquely identifying the job, if specified and a
+   job with the same key has not yet been run, the new job will not be
+   created
 
 Configure default options for jobs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -414,11 +414,11 @@ dictionary on the job function:
        "kwargs": {"name": "Partner"},
    }
 
-- ``enable``: when ``False``, the button has no effect (default:
-  ``True``)
-- ``func_name``: name of the method on ``queue.job`` that returns an
-  action
-- ``kwargs``: extra arguments to pass to the related action method
+-  ``enable``: when ``False``, the button has no effect (default:
+   ``True``)
+-  ``func_name``: name of the method on ``queue.job`` that returns an
+   action
+-  ``kwargs``: extra arguments to pass to the related action method
 
 Example of related action code:
 
@@ -462,10 +462,10 @@ integers:
 
 Based on this configuration, we can tell that:
 
-- 5 first retries are postponed 10 seconds later
-- retries 5 to 10 postponed 20 seconds later
-- retries 10 to 15 postponed 30 seconds later
-- all subsequent retries postponed 5 minutes later
+-  5 first retries are postponed 10 seconds later
+-  retries 5 to 10 postponed 20 seconds later
+-  retries 10 to 15 postponed 30 seconds later
+-  all subsequent retries postponed 5 minutes later
 
 **Job Context**
 
@@ -512,11 +512,11 @@ Testing
 The recommended way to test jobs, rather than running them directly and
 synchronously is to split the tests in two parts:
 
-   - one test where the job is mocked (trap jobs with ``trap_jobs()``
-     and the test only verifies that the job has been delayed with the
-     expected arguments
-   - one test that only calls the method of the job synchronously, to
-     validate the proper behavior of this method only
+   -  one test where the job is mocked (trap jobs with ``trap_jobs()``
+      and the test only verifies that the job has been delayed with the
+      expected arguments
+   -  one test that only calls the method of the job synchronously, to
+      validate the proper behavior of this method only
 
 Proceeding this way means that you can prove that jobs will be enqueued
 properly at runtime, and it ensures your code does not have a different
@@ -640,14 +640,14 @@ synchronously
 Tips and tricks
 ~~~~~~~~~~~~~~~
 
-- **Idempotency**
-  (https://www.restapitutorial.com/lessons/idempotency.html): The
-  queue_job should be idempotent so they can be retried several times
-  without impact on the data.
-- **The job should test at the very beginning its relevance**: the
-  moment the job will be executed is unknown by design. So the first
-  task of a job should be to check if the related work is still relevant
-  at the moment of the execution.
+-  **Idempotency**
+   (https://www.restapitutorial.com/lessons/idempotency.html): The
+   queue_job should be idempotent so they can be retried several times
+   without impact on the data.
+-  **The job should test at the very beginning its relevance**: the
+   moment the job will be executed is unknown by design. So the first
+   task of a job should be to check if the related work is still
+   relevant at the moment of the execution.
 
 Patterns
 ~~~~~~~~
@@ -664,8 +664,9 @@ Through the time, two main patterns emerged:
 Known issues / Roadmap
 ======================
 
-- After creating a new database or installing ``queue_job`` on an
-  existing database, Odoo must be restarted for the runner to detect it.
+-  After creating a new database or installing ``queue_job`` on an
+   existing database, Odoo must be restarted for the runner to detect
+   it.
 
 Changelog
 =========
@@ -673,11 +674,11 @@ Changelog
 Next
 ----
 
-- [ADD] Run jobrunner as a worker process instead of a thread in the
-  main process (when running with --workers > 0)
-- [REF] ``@job`` and ``@related_action`` deprecated, any method can be
-  delayed, and configured using ``queue.job.function`` records
-- [MIGRATION] from 13.0 branched at rev. e24ff4b
+-  [ADD] Run jobrunner as a worker process instead of a thread in the
+   main process (when running with --workers > 0)
+-  [REF] ``@job`` and ``@related_action`` deprecated, any method can be
+   delayed, and configured using ``queue.job.function`` records
+-  [MIGRATION] from 13.0 branched at rev. e24ff4b
 
 Bug Tracker
 ===========
@@ -685,7 +686,7 @@ Bug Tracker
 Bugs are tracked on `GitHub Issues <https://github.com/OCA/queue/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
-`feedback <https://github.com/OCA/queue/issues/new?body=module:%20queue_job%0Aversion:%2019.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/OCA/queue/issues/new?body=module:%20queue_job%0Aversion:%2020.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
 
@@ -701,21 +702,21 @@ Authors
 Contributors
 ------------
 
-- Guewen Baconnier <guewen.baconnier@camptocamp.com>
-- Stéphane Bidoul <stephane.bidoul@acsone.eu>
-- Matthieu Dietrich <matthieu.dietrich@camptocamp.com>
-- Jos De Graeve <Jos.DeGraeve@apertoso.be>
-- David Lefever <dl@taktik.be>
-- Laurent Mignon <laurent.mignon@acsone.eu>
-- Laetitia Gangloff <laetitia.gangloff@acsone.eu>
-- Cédric Pigeon <cedric.pigeon@acsone.eu>
-- Tatiana Deribina <tatiana.deribina@avoin.systems>
-- Souheil Bejaoui <souheil.bejaoui@acsone.eu>
-- Eric Antones <eantones@nuobit.com>
-- Simone Orsi <simone.orsi@camptocamp.com>
-- Nguyen Minh Chien <chien@trobz.com>
-- Tran Quoc Duong <duongtq@trobz.com>
-- Vo Hong Thien <thienvh@trobz.com>
+-  Guewen Baconnier <guewen.baconnier@camptocamp.com>
+-  Stéphane Bidoul <stephane.bidoul@acsone.eu>
+-  Matthieu Dietrich <matthieu.dietrich@camptocamp.com>
+-  Jos De Graeve <Jos.DeGraeve@apertoso.be>
+-  David Lefever <dl@taktik.be>
+-  Laurent Mignon <laurent.mignon@acsone.eu>
+-  Laetitia Gangloff <laetitia.gangloff@acsone.eu>
+-  Cédric Pigeon <cedric.pigeon@acsone.eu>
+-  Tatiana Deribina <tatiana.deribina@avoin.systems>
+-  Souheil Bejaoui <souheil.bejaoui@acsone.eu>
+-  Eric Antones <eantones@nuobit.com>
+-  Simone Orsi <simone.orsi@camptocamp.com>
+-  Nguyen Minh Chien <chien@trobz.com>
+-  Tran Quoc Duong <duongtq@trobz.com>
+-  Vo Hong Thien <thienvh@trobz.com>
 
 Other credits
 -------------
@@ -747,6 +748,6 @@ Current `maintainers <https://odoo-community.org/page/maintainer-role>`__:
 
 |maintainer-guewen| |maintainer-sbidoul| 
 
-This module is part of the `OCA/queue <https://github.com/OCA/queue/tree/19.0/queue_job>`_ project on GitHub.
+This module is part of the `OCA/queue <https://github.com/OCA/queue/tree/20.0/queue_job>`_ project on GitHub.
 
 You are welcome to contribute. To learn how please visit https://odoo-community.org/page/Contribute.
