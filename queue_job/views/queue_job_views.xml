@@ -156,7 +156,7 @@
                 <field name="date_created" />
                 <field
                     name="eta"
-                    widget="remaining_days"
+                    widget="relative_date"
                     string="Remaining days to execute"
                     optional="hide"
                 />
