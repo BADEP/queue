@@ -2,7 +2,7 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html)
 
 import functools
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from odoo import api, fields, models
 
@@ -56,7 +56,7 @@ class QueueJob(models.Model):
                 "state": "enqueued",
                 "model_name": "queue.job",
                 "method_name": "write",
-                "date_enqueued": datetime.now() - timedelta(minutes=1),
+                "date_enqueued": fields.Datetime.now() - timedelta(minutes=1),
             }
         )
 

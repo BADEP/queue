@@ -2,10 +2,10 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html)
 
 import hashlib
-from datetime import datetime, timedelta
+from datetime import timedelta
 from unittest import mock
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.tests import common
 
 from odoo.addons.queue_job import identity_exact
@@ -29,6 +29,8 @@ from odoo.addons.queue_job.job import (
 )
 
 from .common import JobCommonCase
+
+to_datetime = fields.Datetime.to_datetime
 
 
 class TestJobsOnTestingMethod(JobCommonCase):
@@ -58,7 +60,7 @@ class TestJobsOnTestingMethod(JobCommonCase):
 
     def test_eta(self):
         """When an `eta` is datetime, it uses it"""
-        now = datetime.now()
+        now = fields.Datetime.now()
         method = self.env["res.users"].mapped
         job_a = Job(method, eta=now)
         self.assertEqual(job_a.eta, now)
@@ -67,18 +69,18 @@ class TestJobsOnTestingMethod(JobCommonCase):
         """When an `eta` is an integer, it adds n seconds up to now"""
         datetime_path = "odoo.addons.queue_job.job.datetime"
         with mock.patch(datetime_path, autospec=True) as mock_datetime:
-            mock_datetime.now.return_value = datetime(2015, 3, 15, 16, 41, 0)
+            mock_datetime.now.return_value = to_datetime("2015-03-15 16:41:00")
             job_a = Job(self.method, eta=60)
-            self.assertEqual(job_a.eta, datetime(2015, 3, 15, 16, 42, 0))
+            self.assertEqual(job_a.eta, to_datetime("2015-03-15 16:42:00"))
 
     def test_eta_timedelta(self):
         """When an `eta` is a timedelta, it adds it up to now"""
         datetime_path = "odoo.addons.queue_job.job.datetime"
         with mock.patch(datetime_path, autospec=True) as mock_datetime:
-            mock_datetime.now.return_value = datetime(2015, 3, 15, 16, 41, 0)
+            mock_datetime.now.return_value = to_datetime("2015-03-15 16:41:00")
             delta = timedelta(hours=3)
             job_a = Job(self.method, eta=delta)
-            self.assertEqual(job_a.eta, datetime(2015, 3, 15, 19, 41, 0))
+            self.assertEqual(job_a.eta, to_datetime("2015-03-15 19:41:00"))
 
     def test_perform_args(self):
         test_job = Job(self.method, args=("o", "k"), kwargs={"c": "!"})
@@ -146,22 +148,22 @@ class TestJobsOnTestingMethod(JobCommonCase):
         job_a = Job(self.method)
         datetime_path = "odoo.addons.queue_job.job.datetime"
         with mock.patch(datetime_path, autospec=True) as mock_datetime:
-            mock_datetime.now.return_value = datetime(2015, 3, 15, 16, 41, 0)
+            mock_datetime.now.return_value = to_datetime("2015-03-15 16:41:00")
             job_a.set_enqueued()
 
         self.assertEqual(job_a.state, ENQUEUED)
-        self.assertEqual(job_a.date_enqueued, datetime(2015, 3, 15, 16, 41, 0))
+        self.assertEqual(job_a.date_enqueued, to_datetime("2015-03-15 16:41:00"))
         self.assertFalse(job_a.date_started)
 
     def test_set_started(self):
         job_a = Job(self.method)
         datetime_path = "odoo.addons.queue_job.job.datetime"
         with mock.patch(datetime_path, autospec=True) as mock_datetime:
-            mock_datetime.now.return_value = datetime(2015, 3, 15, 16, 41, 0)
+            mock_datetime.now.return_value = to_datetime("2015-03-15 16:41:00")
             job_a.set_started()
 
         self.assertEqual(job_a.state, STARTED)
-        self.assertEqual(job_a.date_started, datetime(2015, 3, 15, 16, 41, 0))
+        self.assertEqual(job_a.date_started, to_datetime("2015-03-15 16:41:00"))
 
     def test_worker_pid(self):
         """When a job is started, it gets the PID of the worker that starts it"""
@@ -179,15 +181,15 @@ class TestJobsOnTestingMethod(JobCommonCase):
 
     def test_set_done(self):
         job_a = Job(self.method)
-        job_a.date_started = datetime(2015, 3, 15, 16, 40, 0)
+        job_a.date_started = to_datetime("2015-03-15 16:40:00")
         datetime_path = "odoo.addons.queue_job.job.datetime"
         with mock.patch(datetime_path, autospec=True) as mock_datetime:
-            mock_datetime.now.return_value = datetime(2015, 3, 15, 16, 41, 0)
+            mock_datetime.now.return_value = to_datetime("2015-03-15 16:41:00")
             job_a.set_done(result="test")
 
         self.assertEqual(job_a.state, DONE)
         self.assertEqual(job_a.result, "test")
-        self.assertEqual(job_a.date_done, datetime(2015, 3, 15, 16, 41, 0))
+        self.assertEqual(job_a.date_done, to_datetime("2015-03-15 16:41:00"))
         self.assertEqual(job_a.exec_time, 60.0)
         self.assertFalse(job_a.exc_info)
 
@@ -207,16 +209,16 @@ class TestJobsOnTestingMethod(JobCommonCase):
         job_a = Job(self.method)
         datetime_path = "odoo.addons.queue_job.job.datetime"
         with mock.patch(datetime_path, autospec=True) as mock_datetime:
-            mock_datetime.now.return_value = datetime(2015, 3, 15, 16, 41, 0)
+            mock_datetime.now.return_value = to_datetime("2015-03-15 16:41:00")
             job_a.postpone(result="test", seconds=60)
 
-        self.assertEqual(job_a.eta, datetime(2015, 3, 15, 16, 42, 0))
+        self.assertEqual(job_a.eta, to_datetime("2015-03-15 16:42:00"))
         self.assertEqual(job_a.result, "test")
         self.assertFalse(job_a.exc_info)
 
     def test_company_simple(self):
         company = self.env.ref("base.main_company")
-        eta = datetime.now() + timedelta(hours=5)
+        eta = fields.Datetime.now() + timedelta(hours=5)
         test_job = Job(
             self.env["test.queue.job"].with_company(company).testing_method,
             args=("o", "k"),
@@ -230,7 +232,16 @@ class TestJobsOnTestingMethod(JobCommonCase):
         job_read = Job.load(self.env, test_job.uuid)
         self.assertEqual(test_job.func.__func__, job_read.func.__func__)
         result_ctx = job_read.func(*tuple(test_job.args), **test_job.kwargs)
-        self.assertEqual(result_ctx.get("allowed_company_ids"), company.ids)
+        # Since Odoo 20.0, with_company() is a no-op when the company is
+        # already the current one: check the job restores the same context
+        expected_ctx = self.env["test.queue.job"].with_company(company).env.context
+        self.assertEqual(
+            result_ctx.get("allowed_company_ids"),
+            expected_ctx.get("allowed_company_ids"),
+        )
+        self.assertEqual(
+            self.env["test.queue.job"].with_context(**result_ctx).env.company, company
+        )
 
     def test_company_complex(self):
         company1 = self.env.ref("base.main_company")
@@ -239,7 +250,7 @@ class TestJobsOnTestingMethod(JobCommonCase):
         self.env.user.write({"company_ids": [(6, False, companies.ids)]})
         # Ensure the main company still the first
         self.assertEqual(self.env.user.company_id, company1)
-        eta = datetime.now() + timedelta(hours=5)
+        eta = fields.Datetime.now() + timedelta(hours=5)
         test_job = Job(
             self.env["test.queue.job"].with_company(company2).testing_method,
             args=("o", "k"),
@@ -253,7 +264,14 @@ class TestJobsOnTestingMethod(JobCommonCase):
         job_read = Job.load(self.env, test_job.uuid)
         self.assertEqual(test_job.func.__func__, job_read.func.__func__)
         result_ctx = job_read.func(*tuple(test_job.args), **test_job.kwargs)
-        self.assertEqual(result_ctx.get("allowed_company_ids"), company2.ids)
+        # Since Odoo 20.0, with_company() keeps the other allowed companies
+        # after the selected one
+        self.assertEqual(
+            result_ctx.get("allowed_company_ids"), (company2 | company1).ids
+        )
+        self.assertEqual(
+            self.env["test.queue.job"].with_context(**result_ctx).env.company, company2
+        )
 
     def test_store(self):
         test_job = Job(self.method)
@@ -272,7 +290,7 @@ class TestJobsOnTestingMethod(JobCommonCase):
         self.assertEqual(stored.additional_info, "JUST_TESTING_BUT_FAILED")
 
     def test_read(self):
-        eta = datetime.now() + timedelta(hours=5)
+        eta = fields.Datetime.now() + timedelta(hours=5)
         test_job = Job(
             self.method,
             args=("o", "k"),
@@ -312,7 +330,7 @@ class TestJobsOnTestingMethod(JobCommonCase):
         self.assertAlmostEqual(test_job.date_done, job_read.date_done, delta=delta)
         self.assertAlmostEqual(test_job.eta, job_read.eta, delta=delta)
 
-        test_date = datetime(2015, 3, 15, 21, 7, 0)
+        test_date = to_datetime("2015-03-15 21:07:00")
         job_read.date_enqueued = test_date
         job_read.date_started = test_date
         job_read.date_done = test_date
@@ -451,28 +469,28 @@ class TestJobs(JobCommonCase):
         datetime_path = "odoo.addons.queue_job.job.datetime"
         method = self.env["test.queue.job"].job_with_retry_pattern
         with mock.patch(datetime_path, autospec=True) as mock_datetime:
-            mock_datetime.now.return_value = datetime(2015, 6, 1, 15, 10, 0)
+            mock_datetime.now.return_value = to_datetime("2015-06-01 15:10:00")
             test_job = Job(method, max_retries=0)
             test_job.retry += 1
             test_job.postpone(self.env)
             self.assertEqual(test_job.retry, 1)
-            self.assertEqual(test_job.eta, datetime(2015, 6, 1, 15, 11, 0))
+            self.assertEqual(test_job.eta, to_datetime("2015-06-01 15:11:00"))
             test_job.retry += 1
             test_job.postpone(self.env)
             self.assertEqual(test_job.retry, 2)
-            self.assertEqual(test_job.eta, datetime(2015, 6, 1, 15, 13, 0))
+            self.assertEqual(test_job.eta, to_datetime("2015-06-01 15:13:00"))
             test_job.retry += 1
             test_job.postpone(self.env)
             self.assertEqual(test_job.retry, 3)
-            self.assertEqual(test_job.eta, datetime(2015, 6, 1, 15, 10, 10))
+            self.assertEqual(test_job.eta, to_datetime("2015-06-01 15:10:10"))
             test_job.retry += 1
             test_job.postpone(self.env)
             self.assertEqual(test_job.retry, 4)
-            self.assertEqual(test_job.eta, datetime(2015, 6, 1, 15, 10, 10))
+            self.assertEqual(test_job.eta, to_datetime("2015-06-01 15:10:10"))
             test_job.retry += 1
             test_job.postpone(self.env)
             self.assertEqual(test_job.retry, 5)
-            self.assertEqual(test_job.eta, datetime(2015, 6, 1, 15, 15, 0))
+            self.assertEqual(test_job.eta, to_datetime("2015-06-01 15:15:00"))
 
     def test_retry_pattern_no_zero(self):
         """When we specify a retry pattern without 0, uses RETRY_INTERVAL"""
