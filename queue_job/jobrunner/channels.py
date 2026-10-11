@@ -447,8 +447,7 @@ class Channel:
         """The full name of the channel, in dot separated notation."""
         if self.parent:
             return self.parent.fullname + "." + self.name
-        else:
-            return self.name
+        return self.name
 
     def get_subchannel_by_name(self, subchannel_name):
         return self.children.get(subchannel_name)

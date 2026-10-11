@@ -9,7 +9,7 @@ import sys
 import uuid
 import weakref
 from contextlib import contextmanager, nullcontext
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 from random import randint
 
 import odoo
@@ -60,6 +60,11 @@ DEFAULT_MAX_RETRIES = 5
 RETRY_INTERVAL = 10 * 60  # seconds
 
 _logger = logging.getLogger(__name__)
+
+
+def _naive_now():
+    """Naive datetime of the current time (Odoo runs with TZ=UTC)"""
+    return datetime.now(UTC).replace(tzinfo=None)
 
 
 def identity_exact(job_):
@@ -337,9 +342,9 @@ class Job:
             job_.date_cancelled = stored.date_cancelled
 
         job_.state = stored.state
-        job_.graph_uuid = stored.graph_uuid if stored.graph_uuid else None
-        job_.result = stored.result if stored.result else None
-        job_.exc_info = stored.exc_info if stored.exc_info else None
+        job_.graph_uuid = stored.graph_uuid or None
+        job_.result = stored.result or None
+        job_.exc_info = stored.exc_info or None
         job_.retry = stored.retry
         job_.max_retries = stored.max_retries
         if stored.company_id:
@@ -355,7 +360,7 @@ class Job:
 
     def job_record_with_same_identity_key(self):
         """Check if a job to be executed with the same key exists."""
-        existing = (
+        return (
             self.env["queue.job"]
             .sudo()
             .search(
@@ -366,7 +371,6 @@ class Job:
                 limit=1,
             )
         )
-        return existing
 
     @staticmethod
     def db_records_from_uuids(env, job_uuids):
@@ -461,7 +465,7 @@ class Job:
         if self.priority is None:
             self.priority = DEFAULT_PRIORITY
 
-        self.date_created = datetime.now()
+        self.date_created = _naive_now()
         self._description = description
 
         if isinstance(identity_key, str):
@@ -524,7 +528,7 @@ class Job:
             elif not self.max_retries:  # infinite retries
                 raise
             elif self.retry >= self.max_retries:
-                type_, value, traceback = sys.exc_info()
+                type_, value, _tb = sys.exc_info()
                 # change the exception type but keep the original
                 # traceback and message:
                 # http://blog.ianbicking.org/2007/09/12/re-raising-exceptions/
@@ -745,9 +749,8 @@ class Job:
 
     @property
     def identity_key(self):
-        if self._identity_key is None:
-            if self._identity_key_func:
-                self._identity_key = self._identity_key_func(self)
+        if self._identity_key is None and self._identity_key_func:
+            self._identity_key = self._identity_key_func(self)
         return self._identity_key
 
     @identity_key.setter
@@ -779,10 +782,9 @@ class Job:
     def description(self):
         if self._description:
             return self._description
-        elif self.func.__doc__:
+        if self.func.__doc__:
             return self.func.__doc__.splitlines()[0].strip()
-        else:
-            return f"{self.model_name}.{self.func.__name__}"
+        return f"{self.model_name}.{self.func.__name__}"
 
     @property
     def uuid(self):
@@ -808,9 +810,9 @@ class Job:
         if not value:
             self._eta = None
         elif isinstance(value, timedelta):
-            self._eta = datetime.now() + value
+            self._eta = _naive_now() + value
         elif isinstance(value, int):
-            self._eta = datetime.now() + timedelta(seconds=value)
+            self._eta = _naive_now() + timedelta(seconds=value)
         else:
             self._eta = value
 
@@ -845,13 +847,13 @@ class Job:
 
     def set_enqueued(self):
         self.state = ENQUEUED
-        self.date_enqueued = datetime.now()
+        self.date_enqueued = _naive_now()
         self.date_started = None
         self.worker_pid = None
 
     def set_started(self):
         self.state = STARTED
-        self.date_started = datetime.now()
+        self.date_started = _naive_now()
         self.worker_pid = os.getpid()
         self.add_lock_record()
 
@@ -859,13 +861,13 @@ class Job:
         self.state = DONE
         self.exc_name = None
         self.exc_info = None
-        self.date_done = datetime.now()
+        self.date_done = _naive_now()
         if result is not None:
             self.result = result
 
     def set_cancelled(self, result=None):
         self.state = CANCELLED
-        self.date_cancelled = datetime.now()
+        self.date_cancelled = _naive_now()
         if result is not None:
             self.result = result
 
@@ -925,7 +927,7 @@ class Job:
         if not funcname:
             funcname = record._default_related_action
         if not isinstance(funcname, str):
-            raise ValueError(
+            raise TypeError(
                 "related_action must be the name of the method on queue.job as string"
             )
         action = getattr(record, funcname)

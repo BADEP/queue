@@ -2,6 +2,7 @@
 # license lgpl-3.0 or later (http://www.gnu.org/licenses/lgpl.html)
 
 import json
+import typing
 from datetime import date, datetime
 
 import dateutil
@@ -30,7 +31,7 @@ class JobSerialized(fields.Json):
     _base_type = None
 
     # these are the default values when we convert an empty value
-    _default_json_mapping = {
+    _default_json_mapping: typing.ClassVar[dict] = {
         dict: "{}",
         list: "[]",
         tuple: "[]",
@@ -62,8 +63,7 @@ class JobSerialized(fields.Json):
         # cache format: json.dumps(value) or None
         if isinstance(value, self._base_type):
             return json.dumps(value, cls=JobEncoder)
-        else:
-            return value or None
+        return value or None
 
     def convert_to_record(self, value, record):
         default = self._base_type_default_json(record.env)
@@ -94,16 +94,16 @@ class JobEncoder(json.JSONEncoder):
                 "su": obj.env.su,
                 "context": self._get_record_context(obj),
             }
-        elif isinstance(obj, datetime):
+        if isinstance(obj, datetime):
             return {"_type": "datetime_isoformat", "value": obj.isoformat()}
-        elif isinstance(obj, date):
+        if isinstance(obj, date):
             return {"_type": "date_isoformat", "value": obj.isoformat()}
-        elif isinstance(obj, lxml.etree._Element):
+        if isinstance(obj, lxml.etree._Element):
             return {
                 "_type": "etree_element",
                 "value": lxml.etree.tostring(obj, encoding=str),
             }
-        elif isinstance(obj, lazy):
+        if isinstance(obj, lazy):
             return obj._value
         return json.JSONEncoder.default(self, obj)
 
@@ -126,10 +126,10 @@ class JobDecoder(json.JSONDecoder):
             if obj.get("context"):
                 model = model.with_context(**obj.get("context"))
             return model.browse(obj["ids"])
-        elif type_ == "datetime_isoformat":
+        if type_ == "datetime_isoformat":
             return dateutil.parser.parse(obj["value"])
-        elif type_ == "date_isoformat":
+        if type_ == "date_isoformat":
             return dateutil.parser.parse(obj["value"]).date()
-        elif type_ == "etree_element":
+        if type_ == "etree_element":
             return lxml.etree.fromstring(obj["value"])
         return obj

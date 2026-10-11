@@ -383,18 +383,19 @@ transaction.</p>
 <pre class="code python literal-block">
 <span class="kn">from</span><span class="w"> </span><span class="nn">odoo</span><span class="w"> </span><span class="kn">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">api</span><span class="w">
 
-</span><span class="k">class</span><span class="w"> </span><span class="nc">MyModel</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span><span class="w">
-</span>   <span class="n">_name</span> <span class="o">=</span> <span class="s1">'my.model'</span><span class="w">
 
-</span>   <span class="k">def</span><span class="w"> </span><span class="nf">my_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span><span class="w">
-</span>       <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'executed with a: </span><span class="si">%s</span><span class="s1"> and k: </span><span class="si">%s</span><span class="s1">'</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span><span class="w">
+</span><span class="k">class</span><span class="w"> </span><span class="nc">MyModel</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span><span class="w">
+</span>    <span class="n">_name</span> <span class="o">=</span> <span class="s2">&quot;my.model&quot;</span><span class="w">
+
+</span>    <span class="k">def</span><span class="w"> </span><span class="nf">my_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span><span class="w">
+</span>        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;executed with a: </span><span class="si">%s</span><span class="s2"> and k: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span><span class="w">
 
 
 </span><span class="k">class</span><span class="w"> </span><span class="nc">MyOtherModel</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span><span class="w">
-</span>    <span class="n">_name</span> <span class="o">=</span> <span class="s1">'my.other.model'</span><span class="w">
+</span>    <span class="n">_name</span> <span class="o">=</span> <span class="s2">&quot;my.other.model&quot;</span><span class="w">
 
 </span>    <span class="k">def</span><span class="w"> </span><span class="nf">button_do_stuff</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span><span class="w">
-</span>        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s1">'my.model'</span><span class="p">]</span><span class="o">.</span><span class="n">with_delay</span><span class="p">()</span><span class="o">.</span><span class="n">my_method</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</span>        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s2">&quot;my.model&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">with_delay</span><span class="p">()</span><span class="o">.</span><span class="n">my_method</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre>
 <p>In the snippet of code above, when we call <tt class="docutils literal">button_do_stuff</tt>, a job
 <strong>capturing the method and arguments</strong> will be postponed. It will be
@@ -444,8 +445,7 @@ record concerned by the job</li>
 <li><a class="reference internal" href="#credits" id="toc-entry-16">Credits</a><ul>
 <li><a class="reference internal" href="#authors" id="toc-entry-17">Authors</a></li>
 <li><a class="reference internal" href="#contributors" id="toc-entry-18">Contributors</a></li>
-<li><a class="reference internal" href="#other-credits" id="toc-entry-19">Other credits</a></li>
-<li><a class="reference internal" href="#maintainers" id="toc-entry-20">Maintainers</a></li>
+<li><a class="reference internal" href="#maintainers" id="toc-entry-19">Maintainers</a></li>
 </ul>
 </li>
 </ul>
@@ -622,6 +622,7 @@ like:</p>
 <pre class="code python literal-block">
 <span class="kn">from</span><span class="w"> </span><span class="nn">odoo.addons.queue_job.delay</span><span class="w"> </span><span class="kn">import</span> <span class="n">group</span><span class="p">,</span> <span class="n">chain</span><span class="w">
 
+
 </span><span class="k">def</span><span class="w"> </span><span class="nf">button_done</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span><span class="w">
 </span>    <span class="n">group_a</span> <span class="o">=</span> <span class="n">group</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delayable</span><span class="p">()</span><span class="o">.</span><span class="n">method_foo</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">delayable</span><span class="p">()</span><span class="o">.</span><span class="n">method_bar</span><span class="p">())</span><span class="w">
 </span>    <span class="n">group_b</span> <span class="o">=</span> <span class="n">group</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delayable</span><span class="p">()</span><span class="o">.</span><span class="n">method_baz</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">delayable</span><span class="p">()</span><span class="o">.</span><span class="n">method_baz</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span><span class="w">
@@ -650,8 +651,7 @@ follows:</p>
 <pre class="code python literal-block">
 <span class="k">def</span><span class="w"> </span><span class="nf">button_split_delayable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span><span class="w">
 </span>    <span class="p">(</span><span class="w">
-</span>        <span class="bp">self</span>  <span class="c1"># Can be a big recordset, let's say 1000 records</span><span class="w">
-</span>        <span class="o">.</span><span class="n">delayable</span><span class="p">()</span><span class="w">
+</span>        <span class="bp">self</span><span class="o">.</span><span class="n">delayable</span><span class="p">()</span>  <span class="c1"># Can be a big recordset, let's say 1000 records</span><span class="w">
 </span>        <span class="o">.</span><span class="n">generate_thumbnail</span><span class="p">((</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span><span class="w">
 </span>        <span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">priority</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span><span class="w">
 </span>        <span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s2">&quot;generate xxx&quot;</span><span class="p">))</span><span class="w">
@@ -665,10 +665,9 @@ only start when the previous one is done:</p>
 <pre class="code python literal-block">
 <span class="k">def</span><span class="w"> </span><span class="nf">button_increment_var</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span><span class="w">
 </span>    <span class="p">(</span><span class="w">
-</span>        <span class="bp">self</span><span class="w">
-</span>        <span class="o">.</span><span class="n">delayable</span><span class="p">()</span><span class="w">
+</span>        <span class="bp">self</span><span class="o">.</span><span class="n">delayable</span><span class="p">()</span><span class="w">
 </span>        <span class="o">.</span><span class="n">increment_counter</span><span class="p">()</span><span class="w">
-</span>        <span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">chain</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># Will exceute the jobs one after the other</span><span class="w">
+</span>        <span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">chain</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># Will exceute the jobs one after the other</span><span class="w">
 </span>        <span class="o">.</span><span class="n">delay</span><span class="p">()</span><span class="w">
 </span>    <span class="p">)</span>
 </pre>
@@ -754,19 +753,19 @@ action</li>
 <p>Example of related action code:</p>
 <pre class="code python literal-block">
 <span class="k">class</span><span class="w"> </span><span class="nc">QueueJob</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span><span class="w">
-</span>    <span class="n">_inherit</span> <span class="o">=</span> <span class="s1">'queue.job'</span><span class="w">
+</span>    <span class="n">_inherit</span> <span class="o">=</span> <span class="s2">&quot;queue.job&quot;</span><span class="w">
 
 </span>    <span class="k">def</span><span class="w"> </span><span class="nf">related_action_partner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span><span class="w">
 </span>        <span class="bp">self</span><span class="o">.</span><span class="n">ensure_one</span><span class="p">()</span><span class="w">
 </span>        <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="w">
 </span>        <span class="n">partner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="w">
 </span>        <span class="n">action</span> <span class="o">=</span> <span class="p">{</span><span class="w">
-</span>            <span class="s1">'name'</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span><span class="w">
-</span>            <span class="s1">'type'</span><span class="p">:</span> <span class="s1">'ir.actions.act_window'</span><span class="p">,</span><span class="w">
-</span>            <span class="s1">'res_model'</span><span class="p">:</span> <span class="n">model</span><span class="p">,</span><span class="w">
-</span>            <span class="s1">'view_type'</span><span class="p">:</span> <span class="s1">'form'</span><span class="p">,</span><span class="w">
-</span>            <span class="s1">'view_mode'</span><span class="p">:</span> <span class="s1">'form'</span><span class="p">,</span><span class="w">
-</span>            <span class="s1">'res_id'</span><span class="p">:</span> <span class="n">partner</span><span class="o">.</span><span class="n">id</span><span class="p">,</span><span class="w">
+</span>            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span><span class="w">
+</span>            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;ir.actions.act_window&quot;</span><span class="p">,</span><span class="w">
+</span>            <span class="s2">&quot;res_model&quot;</span><span class="p">:</span> <span class="n">model</span><span class="p">,</span><span class="w">
+</span>            <span class="s2">&quot;view_type&quot;</span><span class="p">:</span> <span class="s2">&quot;form&quot;</span><span class="p">,</span><span class="w">
+</span>            <span class="s2">&quot;view_mode&quot;</span><span class="p">:</span> <span class="s2">&quot;form&quot;</span><span class="p">,</span><span class="w">
+</span>            <span class="s2">&quot;res_id&quot;</span><span class="p">:</span> <span class="n">partner</span><span class="o">.</span><span class="n">id</span><span class="p">,</span><span class="w">
 </span>        <span class="p">}</span><span class="w">
 </span>        <span class="k">return</span> <span class="n">action</span>
 </pre>
@@ -812,10 +811,12 @@ queue_job__no_delay=True in the context.</p>
 <span class="nd">&#64;classmethod</span><span class="w">
 </span><span class="k">def</span><span class="w"> </span><span class="nf">setUpClass</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span><span class="w">
 </span>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setUpClass</span><span class="p">()</span><span class="w">
-</span>    <span class="bp">cls</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">env</span><span class="p">(</span><span class="n">context</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="w">
-</span>        <span class="bp">cls</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">context</span><span class="p">,</span><span class="w">
-</span>        <span class="n">queue_job__no_delay</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># no jobs thanks</span><span class="w">
-</span>    <span class="p">))</span>
+</span>    <span class="bp">cls</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">env</span><span class="p">(</span><span class="w">
+</span>        <span class="n">context</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="w">
+</span>            <span class="bp">cls</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">context</span><span class="p">,</span><span class="w">
+</span>            <span class="n">queue_job__no_delay</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># no jobs thanks</span><span class="w">
+</span>        <span class="p">)</span><span class="w">
+</span>    <span class="p">)</span>
 </pre>
 <p>Then all your tests execute the job methods synchronously without
 delaying any jobs.</p>
@@ -894,7 +895,7 @@ calling <tt class="docutils literal">jobs_tester.perform_enqueued_jobs()</tt> in
 </span>            <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">my_job_method</span><span class="p">,</span><span class="w">
 </span>            <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Hi!&quot;</span><span class="p">,),</span><span class="w">
 </span>            <span class="n">kwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">count</span><span class="o">=</span><span class="n">expected_count</span><span class="p">),</span><span class="w">
-</span>            <span class="n">properties</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">priority</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span><span class="w">
+</span>            <span class="n">properties</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">priority</span><span class="o">=</span><span class="mi">15</span><span class="p">),</span><span class="w">
 </span>        <span class="p">)</span><span class="w">
 </span>        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">expected_count</span><span class="p">)</span><span class="w">
 
@@ -920,10 +921,12 @@ context.</p>
 <span class="nd">&#64;classmethod</span><span class="w">
 </span><span class="k">def</span><span class="w"> </span><span class="nf">setUpClass</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span><span class="w">
 </span>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setUpClass</span><span class="p">()</span><span class="w">
-</span>    <span class="bp">cls</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">env</span><span class="p">(</span><span class="n">context</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="w">
-</span>        <span class="bp">cls</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">context</span><span class="p">,</span><span class="w">
-</span>        <span class="n">queue_job__no_delay</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># no jobs thanks</span><span class="w">
-</span>    <span class="p">))</span>
+</span>    <span class="bp">cls</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">env</span><span class="p">(</span><span class="w">
+</span>        <span class="n">context</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="w">
+</span>            <span class="bp">cls</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">context</span><span class="p">,</span><span class="w">
+</span>            <span class="n">queue_job__no_delay</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># no jobs thanks</span><span class="w">
+</span>        <span class="p">)</span><span class="w">
+</span>    <span class="p">)</span>
 </pre>
 <p>Then all your tests execute the job methods synchronously without
 delaying any jobs.</p>
@@ -1020,13 +1023,8 @@ If you spotted it first, help us to smash it by providing a detailed and welcome
 <li>Vo Hong Thien &lt;<a class="reference external" href="mailto:thienvh&#64;trobz.com">thienvh&#64;trobz.com</a>&gt;</li>
 </ul>
 </div>
-<div class="section" id="other-credits">
-<h3><a class="toc-backref" href="#toc-entry-19">Other credits</a></h3>
-<p>The migration of this module from 17.0 to 18.0 was financially supported
-by Camptocamp.</p>
-</div>
 <div class="section" id="maintainers">
-<h3><a class="toc-backref" href="#toc-entry-20">Maintainers</a></h3>
+<h3><a class="toc-backref" href="#toc-entry-19">Maintainers</a></h3>
 <p>This module is maintained by the OCA.</p>
 <a class="reference external image-reference" href="https://odoo-community.org">
 <img alt="Odoo Community Association" src="https://odoo-community.org/logo.png" />

@@ -24,13 +24,15 @@ import os
 import selectors
 import threading
 import time
-from contextlib import closing, contextmanager
+from contextlib import closing, contextmanager, suppress
 
 import psycopg2
 import requests
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 import odoo
+import odoo.modules.db
+import odoo.sql_db
 from odoo.tools import config
 
 from . import queue_job_config
@@ -72,7 +74,7 @@ def _odoo_now():
 
 
 def _connection_info_for(db_name):
-    db_or_uri, connection_info = odoo.sql_db.connection_info_for(db_name)
+    _db_or_uri, connection_info = odoo.sql_db.connection_info_for(db_name)
 
     for p in ("host", "port", "user", "password"):
         cfg = os.environ.get(
@@ -133,14 +135,11 @@ class Database:
             raise
 
     def close(self):
-        # pylint: disable=except-pass
         # if close fail for any reason, it's either because it's already closed
         # and we don't care, or for any reason but anyway it will be closed on
         # del
-        try:
+        with suppress(psycopg2.Error, AttributeError):
             self.conn.close()
-        except Exception:
-            pass
         self.conn = None
 
     def _acquire_master_lock(self):
@@ -369,20 +368,19 @@ class QueueJobRunner:
         password = os.environ.get(
             "ODOO_QUEUE_JOB_HTTP_AUTH_PASSWORD"
         ) or queue_job_config.get("http_auth_password")
-        runner = cls(
+        return cls(
             scheme=scheme or "http",
             host=host or "localhost",
             port=port or 8069,
             user=user,
             password=password,
         )
-        return runner
 
     def get_db_names(self):
         db_names = config["db_name"]
         if db_names:
             return db_names
-        return odoo.service.db.list_dbs(True)
+        return odoo.modules.db.list_dbs(force=True)
 
     def close_databases(self, remove_jobs=True):
         for db_name, db in self.db_by_name.items():
@@ -474,17 +472,16 @@ class QueueJobRunner:
         # if timeout remains a large negative number, it is most
         # probably a bug
         _logger.debug("select() timeout: %.2f sec", timeout)
-        if timeout > 0:
-            if conns and not self._stop:
-                with select() as sel:
-                    for conn in conns:
-                        sel.register(conn, selectors.EVENT_READ)
-                    events = sel.select(timeout=timeout)
-                    for key, _mask in events:
-                        if key.fileobj == self._stop_pipe[0]:
-                            # stop-pipe is not a conn so doesn't need poll()
-                            continue
-                        key.fileobj.poll()
+        if timeout > 0 and conns and not self._stop:
+            with select() as sel:
+                for conn in conns:
+                    sel.register(conn, selectors.EVENT_READ)
+                events = sel.select(timeout=timeout)
+                for key, _mask in events:
+                    if key.fileobj == self._stop_pipe[0]:
+                        # stop-pipe is not a conn so doesn't need poll()
+                        continue
+                    key.fileobj.poll()
 
     def stop(self):
         _logger.info("graceful stop requested")

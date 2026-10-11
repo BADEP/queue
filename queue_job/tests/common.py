@@ -289,13 +289,12 @@ class JobsTrap:
             patcher.stop()
 
     def _filtered_enqueued_jobs(self, job_method):
-        enqueued_jobs = [
+        return [
             job
             for job in self.enqueued_jobs
             if job.func.__self__ == job_method.__self__
             and job.func.__func__ == job_method.__func__
         ]
-        return enqueued_jobs
 
     def _format_job_call(self, call):
         # Build method argument string (positional and keyword) separately

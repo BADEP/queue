@@ -4,7 +4,8 @@
 import logging
 import random
 import time
-from datetime import datetime, timedelta
+import typing
+from datetime import timedelta
 
 from odoo import api, exceptions, fields, models
 from odoo.tools import config, html_escape
@@ -35,7 +36,7 @@ class QueueJob(models.Model):
 
     _name = "queue.job"
     _description = "Queue Job"
-    _inherit = ["mail.thread", "mail.activity.mixin"]
+    _inherit: typing.ClassVar[list[str]] = ["mail.thread", "mail.activity.mixin"]
     _log_access = False
 
     _order = "date_created DESC, date_done DESC"
@@ -70,9 +71,7 @@ class QueueJob(models.Model):
         help="Single shared identifier of a Graph. Empty for a single job.",
     )
     user_id = fields.Many2one(comodel_name="res.users", string="User ID")
-    company_id = fields.Many2one(
-        comodel_name="res.company", string="Company", index=True
-    )
+    company_id = fields.Many2one(comodel_name="res.company", index=True)
     name = fields.Char(string="Description", readonly=True)
 
     model_name = fields.Char(string="Model", readonly=True)
@@ -121,7 +120,6 @@ class QueueJob(models.Model):
     channel_method_name = fields.Char(string="Complete Method Name", readonly=True)
     job_function_id = fields.Many2one(
         comodel_name="queue.job.function",
-        string="Job Function",
         readonly=True,
     )
 
@@ -414,8 +412,11 @@ class QueueJob(models.Model):
 
         Called from a cron.
         """
-        for channel in self.env["queue.job.channel"].search([]):  # pylint: disable=no-search-all
-            deadline = datetime.now() - timedelta(days=int(channel.removal_interval))
+        channels = self.env["queue.job.channel"].search([])  # pylint: disable=no-search-all
+        for channel in channels:
+            deadline = fields.Datetime.now() - timedelta(
+                days=int(channel.removal_interval)
+            )
             # Delete in chunks using a stable order (matches composite index)
             while True:
                 jobs = self.search(

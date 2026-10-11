@@ -222,15 +222,14 @@ class Base(models.AbstractModel):
             ):
                 # we are in the job execution
                 return auto_delay_wrapper.origin(self, *args, **kwargs)
-            else:
-                # replace the synchronous call by a job on itself
-                method_name = auto_delay_wrapper.origin.__name__
-                job_options_method = getattr(self, f"{method_name}_job_options", None)
-                job_options = {}
-                if job_options_method:
-                    job_options.update(job_options_method(*args, **kwargs))
-                delayed = self.with_delay(**job_options)
-                return getattr(delayed, method_name)(*args, **kwargs)
+            # replace the synchronous call by a job on itself
+            method_name = auto_delay_wrapper.origin.__name__
+            job_options_method = getattr(self, f"{method_name}_job_options", None)
+            job_options = {}
+            if job_options_method:
+                job_options.update(job_options_method(*args, **kwargs))
+            delayed = self.with_delay(**job_options)
+            return getattr(delayed, method_name)(*args, **kwargs)
 
         origin_func = getattr(type(self), method_name)
         auto_delay_wrapper.origin = origin_func

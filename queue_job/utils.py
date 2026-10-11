@@ -22,3 +22,4 @@ def must_run_without_delay(env):
         if not tools.config["test_enable"]:
             _logger.info("`queue_job__no_delay` ctx key found. NO JOB scheduled.")
         return True
+    return None

@@ -58,7 +58,7 @@ class Graph:
     instances, although ultimately it is used for this purpose.
     """
 
-    __slots__ = "_graph"
+    __slots__ = ("_graph",)
 
     def __init__(self, graph=None):
         if graph:
@@ -218,10 +218,7 @@ class DelayableGraph(Graph):
         :func:`odoo.addons.queue_job.tests.common.trap_jobs`.
         """
         envs = {vertex.recordset.env for vertex in vertices}
-        for env in envs:
-            if must_run_without_delay(env):
-                return True
-        return False
+        return any(must_run_without_delay(env) for env in envs)
 
     @staticmethod
     def _ensure_same_graph_uuid(jobs):
