@@ -4,7 +4,7 @@
 import os
 from unittest import mock
 
-import odoo.tests.common as common
+from odoo.tests import common
 from odoo.tools import mute_logger
 
 from odoo.addons.queue_job.delay import Delayable
@@ -23,14 +23,14 @@ class TestDelayMocks(common.TransactionCase):
                 self.env["test.queue.job"].testing_method,
                 args=(1,),
                 kwargs={"foo": 2},
-                properties=dict(
-                    channel="root.test",
-                    description="Test",
-                    eta=15,
-                    identity_key=identity_exact,
-                    max_retries=1,
-                    priority=15,
-                ),
+                properties={
+                    "channel": "root.test",
+                    "description": "Test",
+                    "eta": 15,
+                    "identity_key": identity_exact,
+                    "max_retries": 1,
+                    "priority": 15,
+                },
             )
 
     def test_trap_jobs_on_with_delay_recordset(self):
@@ -44,14 +44,14 @@ class TestDelayMocks(common.TransactionCase):
                 recordset.testing_method,
                 args=(1,),
                 kwargs={"foo": 2},
-                properties=dict(
-                    channel="root.test",
-                    description="Test",
-                    eta=15,
-                    identity_key=identity_exact,
-                    max_retries=1,
-                    priority=15,
-                ),
+                properties={
+                    "channel": "root.test",
+                    "description": "Test",
+                    "eta": 15,
+                    "identity_key": identity_exact,
+                    "max_retries": 1,
+                    "priority": 15,
+                },
             )
 
     def test_trap_jobs_on_with_delay_recordset_no_properties(self):
@@ -76,10 +76,10 @@ class TestDelayMocks(common.TransactionCase):
                 recordset.testing_method,
                 args=(1,),
                 kwargs={"foo": 2},
-                properties=dict(
-                    description="Test",
-                    eta=15,
-                ),
+                properties={
+                    "description": "Test",
+                    "eta": 15,
+                },
             )
 
     def test_trap_with_identity_key(self):
@@ -92,14 +92,14 @@ class TestDelayMocks(common.TransactionCase):
                 self.env["test.queue.job"].testing_method,
                 args=(1,),
                 kwargs={"foo": 2},
-                properties=dict(
-                    channel="root.test",
-                    description="Test",
-                    eta=15,
-                    identity_key=identity_exact,
-                    max_retries=1,
-                    priority=15,
-                ),
+                properties={
+                    "channel": "root.test",
+                    "description": "Test",
+                    "eta": 15,
+                    "identity_key": identity_exact,
+                    "max_retries": 1,
+                    "priority": 15,
+                },
             )
 
             # Should not enqueue again
@@ -154,14 +154,14 @@ class TestDelayMocks(common.TransactionCase):
                     self.env["test.queue.job"].testing_method,
                     args=(1,),
                     kwargs={"foo": 2},
-                    properties=dict(
-                        channel="root.test",
-                        description="Test",
-                        eta=15,
-                        identity_key=identity_exact,
-                        max_retries=1,
-                        priority=15,
-                    ),
+                    properties={
+                        "channel": "root.test",
+                        "description": "Test",
+                        "eta": 15,
+                        "identity_key": identity_exact,
+                        "max_retries": 1,
+                        "priority": 15,
+                    },
                 )
 
     def test_trap_jobs_on_with_delay_assert_recordset_enqueued_mismatch(self):
@@ -184,14 +184,14 @@ class TestDelayMocks(common.TransactionCase):
                     recordset.testing_method,
                     args=(1,),
                     kwargs={"foo": 2},
-                    properties=dict(
-                        channel="root.test",
-                        description="Test",
-                        eta=15,
-                        identity_key=identity_exact,
-                        max_retries=1,
-                        priority=15,
-                    ),
+                    properties={
+                        "channel": "root.test",
+                        "description": "Test",
+                        "eta": 15,
+                        "identity_key": identity_exact,
+                        "max_retries": 1,
+                        "priority": 15,
+                    },
                 )
 
     def test_trap_jobs_on_graph(self):
@@ -205,14 +205,14 @@ class TestDelayMocks(common.TransactionCase):
                 self.env["test.queue.job"].testing_method,
                 args=(1,),
                 kwargs={"foo": 2},
-                properties=dict(
-                    channel="root.test",
-                    description="Test",
-                    eta=15,
-                    identity_key=identity_exact,
-                    max_retries=1,
-                    priority=15,
-                ),
+                properties={
+                    "channel": "root.test",
+                    "description": "Test",
+                    "eta": 15,
+                    "identity_key": identity_exact,
+                    "max_retries": 1,
+                    "priority": 15,
+                },
             )
             trap.assert_enqueued_job(
                 self.env["test.queue.job"].testing_method,

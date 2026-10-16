@@ -1,7 +1,9 @@
 # Copyright 2019 Versada UAB
 # License LGPL-3 or later (https://www.gnu.org/licenses/lgpl).
 
-from datetime import datetime, timedelta
+from datetime import timedelta
+
+from odoo import fields
 
 from .common import JobCommonCase
 
@@ -14,7 +16,7 @@ class TestQueueJobAutovacuumCronJob(JobCommonCase):
 
     def test_old_jobs_are_deleted_by_cron_job(self):
         """Old jobs are deleted by the autovacuum cron job."""
-        date_done = datetime.now() - timedelta(
+        date_done = fields.Datetime.now() - timedelta(
             days=self.queue_job._removal_interval + 1
         )
         stored = self._create_job()
@@ -25,14 +27,14 @@ class TestQueueJobAutovacuumCronJob(JobCommonCase):
     def test_autovacuum(self):
         # test default removal interval
         stored = self._create_job()
-        date_done = datetime.now() - timedelta(days=29)
+        date_done = fields.Datetime.now() - timedelta(days=29)
         stored.write({"date_done": date_done})
         self.env["queue.job"].autovacuum()
         self.assertEqual(
             len(self.env["queue.job"].search([("channel", "!=", False)])), 1
         )
 
-        date_done = datetime.now() - timedelta(days=31)
+        date_done = fields.Datetime.now() - timedelta(days=31)
         stored.write({"date_done": date_done})
         self.env["queue.job"].autovacuum()
         self.assertEqual(
@@ -44,7 +46,7 @@ class TestQueueJobAutovacuumCronJob(JobCommonCase):
         channel_60days = self.env["queue.job.channel"].create(
             {"name": "60days", "removal_interval": 60, "parent_id": root_channel.id}
         )
-        date_done = datetime.now() - timedelta(days=31)
+        date_done = fields.Datetime.now() - timedelta(days=31)
         job_root = self._create_job()
         job_root.write({"date_done": date_done})
         job_60days = self._create_job()
@@ -59,7 +61,7 @@ class TestQueueJobAutovacuumCronJob(JobCommonCase):
             len(self.env["queue.job"].search([("channel", "!=", False)])), 1
         )
 
-        date_done = datetime.now() - timedelta(days=61)
+        date_done = fields.Datetime.now() - timedelta(days=61)
         job_60days.write({"date_done": date_done})
         self.env["queue.job"].autovacuum()
         self.assertEqual(

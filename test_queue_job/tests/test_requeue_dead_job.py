@@ -1,8 +1,9 @@
 # Copyright 2025 ACSONE SA/NV
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 from contextlib import closing
-from datetime import datetime, timedelta
+from datetime import timedelta
 
+from odoo import fields
 from odoo.tests import tagged
 
 from odoo.addons.queue_job.job import Job
@@ -73,7 +74,7 @@ class TestRequeueDeadJob(JobCommonCase):
 
         job_obj.set_enqueued()
         job_obj.set_started()
-        job_obj.date_enqueued = datetime.now() - timedelta(minutes=1)
+        job_obj.date_enqueued = fields.Datetime.now() - timedelta(minutes=1)
         job_obj.store()
 
         # requeue dead jobs using current cursor
@@ -90,7 +91,7 @@ class TestRequeueDeadJob(JobCommonCase):
         # Only enqueued job, don't set it to started to simulate the scenario
         # that system shutdown before job is starting
         job_obj.set_enqueued()
-        job_obj.date_enqueued = datetime.now() - timedelta(minutes=1)
+        job_obj.date_enqueued = fields.Datetime.now() - timedelta(minutes=1)
         job_obj.store()
 
         # job is now picked up by the requeue query (which includes orphaned jobs)
